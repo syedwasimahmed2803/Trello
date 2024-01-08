@@ -10,8 +10,8 @@ const Board = ({ id, name, prefs }) => {
         <Card
           key={id}
           sx={{
-            minHeight: 80,
-            width: 225,
+            minHeight: 120,
+            width: 250,
             display: "flex",
             backgroundSize: "cover",
             backgroundImage: `url(${prefs.backgroundImage})`,
