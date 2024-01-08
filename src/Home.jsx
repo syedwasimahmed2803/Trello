@@ -30,15 +30,16 @@ const Home = () => {
           display: "flex",
           flexWrap: "wrap",
           marginTop: "10vh",
-          width: "100vw",
         }}
       >
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            marginLeft: "20vw",
+            marginLeft: "10vw",
             marginRight: "10vw",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           {data.map((item) => (
