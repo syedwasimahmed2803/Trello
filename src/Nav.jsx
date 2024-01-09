@@ -19,7 +19,7 @@ const Nav = () => {
       }}
     >
       <div className="heading">
-        <div style={{ display: "flex", marginLeft: "7vw" }}>
+        <div style={{ display: "flex", marginLeft: "7rem" }}>
           <Link to={`/`} style={{ textDecoration: "none" }}>
             <HomeIcon style={{ marginTop: "1.5vh" }} />
           </Link>

@@ -64,6 +64,7 @@ export default function CreateLists({ id, onListCreated }) {
           boxShadow:
             "0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0px 0px 0px 1px rgba(255, 255, 255, 0.1)",
           width: "15vw",
+          marginRight: "2vw",
         }}
       >
         <AccordionSummary

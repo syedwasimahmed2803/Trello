@@ -8,6 +8,7 @@ import axios from "axios";
 import { TOKEN, API_KEY } from "./config";
 import CreateCards from "./CreateCards";
 import DeleteCards from "./DeleteCards";
+import Checklists from "./Checklists";
 function Cards({ id }) {
   console.log(id);
   const [data, setData] = useState([]);
@@ -45,7 +46,8 @@ function Cards({ id }) {
                   alignItems: "center",
                 }}
               >
-                {item.name}{" "}
+                {item.name}
+                <Checklists id={item.id} />
               </ListItemText>
               <DeleteCards id={item.id} onDelete={handleDelete} />
             </ListItemButton>
