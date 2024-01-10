@@ -8,31 +8,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import axios from "axios";
-import { API_KEY, TOKEN } from "./config";
-
-// export default function CreateLists({ id }) {
-//   const [input, setInput] = useState("");
-//   // console.log(id);
-
-//   const URL = `https://api.trello.com/1/lists?name=${input}&idBoard=${id}&key=${API_KEY}&token=${TOKEN}`;
-//   const handleChange = async () => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.post(URL);
-//         console.log(response);
-//         if (response.status === 200) {
-//           const data = await response.data;
-//           console.log(data);
-//         }
-//       } catch (error) {
-//         console.error("Error:", error);
-//       }
-//     };
-//     console.log("hello");
-//     setInput("");
-//     await fetchData();
-//   };
-// ... (previous code)
+import { API_KEY, TOKEN } from "../config";
 
 export default function CreateLists({ id, onListCreated }) {
   const [input, setInput] = useState("");
@@ -46,7 +22,7 @@ export default function CreateLists({ id, onListCreated }) {
         if (response.status === 200) {
           const data = await response.data;
           console.log(data);
-          onListCreated();
+          onListCreated(response.data);
         }
       } catch (error) {
         console.error("Error:", error);

@@ -1,7 +1,8 @@
 import Home from "./Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Nav from "./Nav";
-import Cards from "./Lists";
+import "./App.css";
+import Cards from "./FeatureComponents/Lists";
 
 const App = () => {
   return (

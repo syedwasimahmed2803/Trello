@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { API_KEY, TOKEN } from "./config";
+import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
 import axios from "axios";
 
@@ -17,7 +17,7 @@ function CreateCheckItem({ id, onCheckItemCreated }) {
         if (response.status === 200) {
           const data = await response.data;
           console.log(data);
-          onCheckItemCreated();
+          onCheckItemCreated(data);
         }
       } catch (error) {
         console.error("Error:", error);

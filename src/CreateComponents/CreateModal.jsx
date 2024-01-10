@@ -2,8 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
-import { API_KEY, TOKEN } from "./config";
+import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -63,17 +64,28 @@ export default function CreateModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Enter Name
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ fontWeight: 700, textAlign: "center", marginBottom: "2rem" }}
+          >
+            Create Board
           </Typography>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
+
+          <Box sx={{ display: "flex" }}>
+            <TextField
+              id="outlined-basic"
               value={input}
+              label="Enter Board Name..."
+              variant="outlined"
               onChange={(e) => setInput(e.target.value)}
+              sx={{ marginRight: "auto" }}
             />
-            <button type="submit">Submit</button>
-          </form>
+            <Button onClick={handleSubmit} variant="contained">
+              Add Board
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </div>

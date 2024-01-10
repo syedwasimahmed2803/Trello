@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import axios from "axios";
-import { API_KEY, TOKEN } from "./config";
+import { API_KEY, TOKEN } from "../config";
 
 const DeleteListButton = ({ listId, onDelete }) => {
   const handleDelete = async () => {

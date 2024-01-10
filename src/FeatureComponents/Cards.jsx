@@ -5,9 +5,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { TOKEN, API_KEY } from "./config";
-import CreateCards from "./CreateCards";
-import DeleteCards from "./DeleteCards";
+import { TOKEN, API_KEY } from "../config";
+import CreateCards from "../CreateComponents/CreateCards";
+import DeleteCards from "../laidoffcomponents/DeleteCards";
+import DeleteButton from "../CreateComponents/CreateButton";
 import Checklists from "./Checklists";
 function Cards({ id }) {
   console.log(id);
@@ -27,15 +28,20 @@ function Cards({ id }) {
   useEffect(() => {
     fetchData();
   }, [id]);
-  const handleCardCreated = () => {
-    fetchData();
+  const handleCardCreated = (newData) => {
+    setData((prevList) => [...prevList, newData]);
   };
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
   };
   return (
     <>
-      <List>
+      <List
+        sx={{
+          maxHeight: "55vh",
+          overflowY: "auto",
+        }}
+      >
         {data.map((item) => (
           <ListItem sx={{}} key={item.id} disablePadding>
             <ListItemButton style={{}}>
@@ -49,7 +55,8 @@ function Cards({ id }) {
                 {item.name}
                 <Checklists id={item.id} />
               </ListItemText>
-              <DeleteCards id={item.id} onDelete={handleDelete} />
+              {/* <DeleteCards id={item.id} onDelete={handleDelete} /> */}
+              <DeleteButton type="card" id={item.id} onDelete={handleDelete} />
             </ListItemButton>
           </ListItem>
         ))}

@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { API_KEY, TOKEN } from "./config";
+import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
 import axios from "axios";
 
@@ -21,8 +21,7 @@ function CreateChecklist({ id, onChecklistCreated }) {
         console.log(response);
         if (response.status === 200) {
           const data = await response.data;
-          console.log(data);
-          onChecklistCreated();
+          onChecklistCreated(data);
         }
       } catch (error) {
         console.error("Error:", error);

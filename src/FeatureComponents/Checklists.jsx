@@ -6,10 +6,11 @@ import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import Modal from "@mui/material/Modal";
 import { useState, useEffect } from "react";
-import { API_KEY, TOKEN } from "./config";
-import DeleteChecklist from "./DeleteChecklist";
+import { API_KEY, TOKEN } from "../config";
+import DeleteChecklist from "../laidoffcomponents/DeleteChecklist";
+import DeleteButton from "../CreateComponents/CreateButton";
 import axios from "axios";
-import CreateChecklist from "./CreateChecklist";
+import CreateChecklist from "../CreateComponents/CreateChecklist";
 import CheckItem from "./CheckItem";
 const style = {
   position: "absolute",
@@ -44,8 +45,8 @@ export default function Checklists({ id }) {
   useEffect(() => {
     fetchData();
   }, []);
-  const handleChecklistCreated = () => {
-    fetchData();
+  const handleChecklistCreated = (newData) => {
+    setData((prevList) => [...prevList, newData]);
   };
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
@@ -73,10 +74,17 @@ export default function Checklists({ id }) {
         <Box sx={style}>
           {data.map((item) => (
             <ListItem key={item.id} disablePadding>
-              <Accordion sx={{ width: "100%" }}>
+              <Accordion
+                sx={{ width: "100%", maxHeight: "50vh", overflowY: "auto" }}
+              >
                 <AccordionSummary
                   expandIcon={
-                    <DeleteChecklist id={item.id} onDelete={handleDelete} />
+                    // <DeleteChecklist id={item.id} onDelete={handleDelete} />
+                    <DeleteButton
+                      type="checklist"
+                      id={item.id}
+                      onDelete={handleDelete}
+                    />
                   }
                   aria-controls="panel1a-content"
                   id="panel1a-header"
@@ -86,7 +94,7 @@ export default function Checklists({ id }) {
 
                 <AccordionDetails>
                   <Typography>
-                    <CheckItem id={item.id} />
+                    <CheckItem id={item.id} cardId={id} />
                   </Typography>
                 </AccordionDetails>
               </Accordion>

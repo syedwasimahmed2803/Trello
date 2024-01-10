@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Board from "./Board";
+import Board from "./FeatureComponents/Board";
 import { TOKEN, API_KEY } from "./config";
 import { Box } from "@mui/material";
 const URL = `https://api.trello.com/1/members/me/boards?key=${API_KEY}&token=${TOKEN}`;

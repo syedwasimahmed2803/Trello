@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { TOKEN, API_KEY } from "./config";
-import CreateLists from "./CreateLists";
+import { TOKEN, API_KEY } from "../config";
+import CreateLists from "../CreateComponents/CreateLists";
 // import CreateCards from "./CreateCards";
-import DeleteListButton from "./DeleteListButton";
+import DeleteListButton from "../laidoffcomponents/DeleteListButton";
+import DeleteButton from "../CreateComponents/CreateButton";
 import Cards from "./Cards";
 function Lists() {
   const [data, setData] = useState([]);
@@ -25,8 +26,8 @@ function Lists() {
   useEffect(() => {
     fetchData();
   }, [id]);
-  const handleListCreated = () => {
-    fetchData();
+  const handleListCreated = (newData) => {
+    setData((prevList) => [...prevList, newData]);
   };
 
   const handleDelete = (deletedId) => {
@@ -61,8 +62,11 @@ function Lists() {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ marginRight: "1rem" }}>{item.name}</span>
-              <DeleteListButton listId={item.id} onDelete={handleDelete} />
+              <span style={{ marginRight: "1rem", fontWeight: 600 }}>
+                {item.name}
+              </span>
+              {/* <DeleteListButton listId={item.id} onDelete={handleDelete} /> */}
+              <DeleteButton type="list" id={item.id} onDelete={handleDelete} />
             </div>
             <div>
               <Cards id={item.id} />

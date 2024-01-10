@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import { API_KEY, TOKEN } from "./config";
+import { API_KEY, TOKEN } from "../config";
 
 function DeleteCards({ id, onDelete }) {
   const handleDelete = async () => {

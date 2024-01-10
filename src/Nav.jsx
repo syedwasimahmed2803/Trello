@@ -1,4 +1,4 @@
-import CreateModal from "./CreateModal";
+import CreateModal from "./CreateComponents/CreateModal";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
