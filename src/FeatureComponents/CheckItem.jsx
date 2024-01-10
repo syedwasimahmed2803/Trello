@@ -52,10 +52,21 @@ export default function CheckItem({ id, cardId }) {
 
   return (
     <div>
-      <Box>
+      <Box
+        sx={{
+          backgroundColor: "rgb(242, 242, 242)",
+          borderRadius: "1rem",
+          marginBlock: "0.5rem",
+        }}
+      >
         {data.map((item) => (
           <div key={item.id} style={{ display: "flex" }}>
-            <FormGroup sx={{ marginRight: "auto" }}>
+            <FormGroup
+              sx={{
+                marginRight: "auto",
+                marginLeft: "1rem",
+              }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox

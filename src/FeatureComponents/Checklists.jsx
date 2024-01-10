@@ -91,7 +91,6 @@ export default function Checklists({ id }) {
                 >
                   <Typography>{item.name}</Typography>
                 </AccordionSummary>
-
                 <AccordionDetails>
                   <Typography>
                     <CheckItem id={item.id} cardId={id} />

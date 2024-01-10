@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ThreeCircles } from "react-loader-spinner";
 import axios from "axios";
 import Board from "./FeatureComponents/Board";
 import { TOKEN, API_KEY } from "./config";
@@ -42,9 +43,27 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          {data.map((item) => (
-            <Board key={item.id} {...item} />
-          ))}
+          {data.length ? (
+            data.map((item) => <Board key={item.id} {...item} />)
+          ) : (
+            <div
+              style={{
+                width: "100vw",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <ThreeCircles
+                visible={true}
+                height="100"
+                width="100"
+                color="#0000FF"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            </div>
+          )}
         </div>
       </Box>
     </>

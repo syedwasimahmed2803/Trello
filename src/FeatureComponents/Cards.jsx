@@ -43,7 +43,15 @@ function Cards({ id }) {
         }}
       >
         {data.map((item) => (
-          <ListItem sx={{}} key={item.id} disablePadding>
+          <ListItem
+            sx={{
+              backgroundColor: "rgb(242, 242, 242)",
+              borderRadius: "1rem",
+              marginBlock: "0.5rem",
+            }}
+            key={item.id}
+            disablePadding
+          >
             <ListItemButton style={{}}>
               <ListItemText
                 style={{
