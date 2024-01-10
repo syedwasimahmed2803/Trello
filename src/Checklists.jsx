@@ -1,12 +1,16 @@
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import Modal from "@mui/material/Modal";
 import { useState, useEffect } from "react";
 import { API_KEY, TOKEN } from "./config";
+import DeleteChecklist from "./DeleteChecklist";
 import axios from "axios";
+import CreateChecklist from "./CreateChecklist";
+import CheckItem from "./CheckItem";
 const style = {
   position: "absolute",
   top: "50%",
@@ -23,7 +27,7 @@ export default function Checklists({ id }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(id);
+  // console.log(id);
   const [data, setData] = useState([]);
   const URL = `https://api.trello.com/1/cards/${id}/checklists?key=${API_KEY}&token=${TOKEN}`;
 
@@ -31,7 +35,6 @@ export default function Checklists({ id }) {
     try {
       const response = await axios.get(URL);
       const data = await response.data;
-      console.log(response);
       setData(data);
     } catch (error) {
       console.error("Error:", error);
@@ -41,6 +44,12 @@ export default function Checklists({ id }) {
   useEffect(() => {
     fetchData();
   }, []);
+  const handleChecklistCreated = () => {
+    fetchData();
+  };
+  const handleDelete = (deletedId) => {
+    setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+  };
   return (
     <div>
       <button
@@ -64,19 +73,29 @@ export default function Checklists({ id }) {
         <Box sx={style}>
           {data.map((item) => (
             <ListItem key={item.id} disablePadding>
-              <ListItemButton style={{}}>
-                <ListItemText
-                  style={{
-                    marginRight: "1rem",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+              <Accordion sx={{ width: "100%" }}>
+                <AccordionSummary
+                  expandIcon={
+                    <DeleteChecklist id={item.id} onDelete={handleDelete} />
+                  }
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  {item.name}
-                </ListItemText>
-              </ListItemButton>
+                  <Typography>{item.name}</Typography>
+                </AccordionSummary>
+
+                <AccordionDetails>
+                  <Typography>
+                    <CheckItem id={item.id} />
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
             </ListItem>
           ))}
+          <CreateChecklist
+            id={id}
+            onChecklistCreated={handleChecklistCreated}
+          />
         </Box>
       </Modal>
     </div>
