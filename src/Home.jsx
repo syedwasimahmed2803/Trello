@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ThreeCircles } from "react-loader-spinner";
+import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import Board from "./FeatureComponents/Board";
 import { TOKEN, API_KEY } from "./config";
@@ -53,15 +54,7 @@ const Home = () => {
                 justifyContent: "center",
               }}
             >
-              <ThreeCircles
-                visible={true}
-                height="100"
-                width="100"
-                color="#0000FF"
-                ariaLabel="three-circles-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-              />
+              <Skeleton variant="rectangular" width={210} height={118} />
             </div>
           )}
         </div>
