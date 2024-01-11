@@ -7,11 +7,12 @@ import { List } from "react-content-loader";
 
 import Cards from "./Cards";
 import { showLists } from "../API";
+import { BoardProvider, useBoardContext } from "../Background";
 function Lists() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const { backgroundImageObject, backgroundColorObject } = useBoardContext();
   const navigate = useNavigate();
-
   const fetchData = async () => {
     try {
       const data = await showLists(id);
@@ -37,17 +38,34 @@ function Lists() {
     <div
       style={{
         display: "flex",
-        gap: "2rem",
-        marginTop: "15vh",
-        marginLeft: "2vw",
+        // gap: "2rem",
+        marginTop: "9vh",
+        paddingTop: "3vh",
+        // marginLeft: "2vw",
+        backgroundColor: backgroundColorObject[id]
+          ? backgroundColorObject[id]
+          : "#0079BF",
+        backgroundImage: `url(${backgroundImageObject[id]})`,
+        height: "91vh",
+        overflowX: "auto",
+        backgroundSize: "cover",
       }}
     >
-      <div style={{ display: "flex", gap: "2rem", alignItems: "start" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "2rem",
+          alignItems: "start",
+        }}
+      >
         {data.length ? (
           data.map((item) => (
             <div
               key={item.id}
               style={{
+                marginLeft: "2vw",
+                marginTop: "3vh",
+                backgroundColor: "white",
                 width: "20rem",
                 padding: "1rem",
                 borderRadius: "10px",

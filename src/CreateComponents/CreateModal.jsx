@@ -66,7 +66,13 @@ export default function CreateModal() {
             Create Board
           </Typography>
 
-          <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
             <TextField
               id="outlined-basic"
               value={input}

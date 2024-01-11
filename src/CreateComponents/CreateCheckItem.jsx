@@ -8,19 +8,6 @@ function CreateCheckItem({ id, onCheckItemCreated }) {
   const [input, setInput] = useState("");
 
   const handleChange = async () => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.post(URL);
-    //     console.log(response);
-    //     if (response.status === 200) {
-    //       const data = await response.data;
-    //       console.log(data);
-    //       onCheckItemCreated(data);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error:", error);
-    //   }
-    // };
     const fetchData = async () => {
       try {
         const data = await createCheckItem(id, input);
@@ -33,7 +20,7 @@ function CreateCheckItem({ id, onCheckItemCreated }) {
     await fetchData();
   };
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
       <TextField
         id="outlined-basic"
         value={input}
