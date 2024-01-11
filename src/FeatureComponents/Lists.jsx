@@ -3,15 +3,16 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { TOKEN, API_KEY } from "../config";
 import CreateLists from "../CreateComponents/CreateLists";
-// import CreateCards from "./CreateCards";
-import DeleteListButton from "../laidoffcomponents/DeleteListButton";
 import DeleteButton from "../CreateComponents/CreateButton";
+import { useNavigate } from "react-router-dom";
+import { List } from "react-content-loader";
+
 import Cards from "./Cards";
 function Lists() {
   const [data, setData] = useState([]);
   const { id } = useParams();
   const URL = `https://api.trello.com/1/boards/${id}/lists?key=${API_KEY}&token=${TOKEN}`;
-
+  const navigate = useNavigate();
   const fetchData = async () => {
     try {
       const response = await axios.get(URL);
@@ -20,6 +21,7 @@ function Lists() {
       console.log(data);
     } catch (error) {
       console.error("Error:", error);
+      navigate(`/error`);
     }
   };
 
@@ -44,37 +46,56 @@ function Lists() {
       }}
     >
       <div style={{ display: "flex", gap: "2rem", alignItems: "start" }}>
-        {data.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              width: "20rem",
-              padding: "1rem",
-              borderRadius: "10px",
-              boxShadow:
-                "0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0px 0px 0px 1px rgba(255, 255, 255, 0.1)",
-            }}
-          >
+        {data.length ? (
+          data.map((item) => (
             <div
+              key={item.id}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                width: "20rem",
+                padding: "1rem",
+                borderRadius: "10px",
+                boxShadow:
+                  "0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0px 0px 0px 1px rgba(255, 255, 255, 0.1)",
               }}
             >
-              <span style={{ marginRight: "1rem", fontWeight: 600 }}>
-                {item.name}
-              </span>
-              {/* <DeleteListButton listId={item.id} onDelete={handleDelete} /> */}
-              <DeleteButton type="list" id={item.id} onDelete={handleDelete} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span style={{ marginRight: "1rem", fontWeight: 600 }}>
+                  {item.name}
+                </span>
+                {/* <DeleteListButton listId={item.id} onDelete={handleDelete} /> */}
+                <DeleteButton
+                  type="list"
+                  id={item.id}
+                  onDelete={handleDelete}
+                />
+              </div>
+              <div>
+                <Cards id={item.id} />
+              </div>
             </div>
-            <div>
-              <Cards id={item.id} />
-            </div>
+          ))
+        ) : (
+          <div
+            style={{
+              width: "100vw",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <List />
+            <List />
+            <List />
+            <List />
           </div>
-        ))}
+        )}
+        <CreateLists id={id} onListCreated={handleListCreated} />
       </div>
-      <CreateLists id={id} onListCreated={handleListCreated} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ThreeCircles } from "react-loader-spinner";
+import { Instagram } from "react-content-loader";
 import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import Board from "./FeatureComponents/Board";
@@ -49,12 +49,19 @@ const Home = () => {
           ) : (
             <div
               style={{
-                width: "100vw",
+                width: "80vw",
+                height: "60vh",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "space-around",
+                alignItems: "center",
+                marginRight: "10vw",
+                marginTop: "2vh",
               }}
             >
-              <Skeleton variant="rectangular" width={210} height={118} />
+              <Instagram style={{ marginInline: "1vw" }} />
+              <Instagram style={{ marginInline: "1vw" }} />
+              <Instagram style={{ marginInline: "1vw" }} />
+              <Instagram style={{ marginInline: "1vw" }} />
             </div>
           )}
         </div>
