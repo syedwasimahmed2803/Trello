@@ -16,6 +16,7 @@ const style = {
   width: 400,
   bgcolor: "background.paper",
   border: "2px solid #000",
+  borderRadius: "1rem",
   boxShadow: 24,
   p: 4,
 };
@@ -61,7 +62,7 @@ export default function CreateModal() {
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            sx={{ fontWeight: 700, textAlign: "center", marginBottom: "2rem" }}
+            sx={{ fontWeight: 700, textAlign: "center", marginBottom: "1rem" }}
           >
             Create Board
           </Typography>
