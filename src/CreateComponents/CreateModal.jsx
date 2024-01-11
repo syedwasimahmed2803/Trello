@@ -4,10 +4,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Modal from "@mui/material/Modal";
-import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { createBoard } from "../API";
 
 const style = {
@@ -30,20 +28,7 @@ export default function CreateModal() {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const URL = `https://api.trello.com/1/boards/?name=${input}&key=${API_KEY}&token=${TOKEN}`;
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.post(URL);
-    //     console.log(response);
-    //     if (response.status === 200) {
-    //       const data = await response.data;
-    //       console.log(data);
-    //       navigate(`/boards/${data.id}`);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error:", error);
-    //   }
-    // };
+
     const fetchData = async () => {
       try {
         const data = await createBoard(input);
