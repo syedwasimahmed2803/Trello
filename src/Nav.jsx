@@ -16,6 +16,7 @@ const Nav = () => {
         padding: "2vh",
         margin: "0",
         boxShadow: "2px 2px 5px rgba(5, 5, 5, 0.2)",
+        backgroundColor: "white",
       }}
     >
       <div className="heading">
