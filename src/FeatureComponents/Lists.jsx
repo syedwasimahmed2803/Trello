@@ -7,9 +7,10 @@ import { List } from "react-content-loader";
 
 import Cards from "./Cards";
 import { showLists } from "../API";
-import { BoardProvider, useBoardContext } from "../Background";
+import { useBoardContext } from "../Background";
 function Lists() {
   const [data, setData] = useState([]);
+  const [loadState, setLoadState] = useState(true);
   const { id } = useParams();
   const { backgroundImageObject, backgroundColorObject } = useBoardContext();
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function Lists() {
     try {
       const data = await showLists(id);
       setData(data);
+      setLoadState(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       navigate(`/error`);
@@ -58,7 +60,7 @@ function Lists() {
           alignItems: "start",
         }}
       >
-        {data.length ? (
+        {!loadState ? (
           data.map((item) => (
             <div
               key={item.id}

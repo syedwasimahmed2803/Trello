@@ -34,6 +34,7 @@ export default function CreateLists({ id, onListCreated }) {
           width: "15rem",
           marginTop: "3vh",
           marginRight: "2vw",
+          marginLeft: "2vw",
         }}
       >
         <AccordionSummary
