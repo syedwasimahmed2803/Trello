@@ -1,27 +1,21 @@
 import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
-import { API_KEY, TOKEN } from "../config";
-import axios from "axios";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import DeleteButton from "../CreateComponents/CreateButton";
-import DeleteCheckItem from "../laidoffcomponents/DeleteCheckItem";
 import CreateCheckItem from "../CreateComponents/CreateCheckItem";
+import { showCheckItems, updateCheckItemState } from "../API";
 
 export default function CheckItem({ id, cardId }) {
   console.log(id);
   const [data, setData] = useState([]);
-  const URL = `https://api.trello.com/1/checklists/${id}/checkItems?key=${API_KEY}&token=${TOKEN}`;
-
   const fetchData = async () => {
     try {
-      const response = await axios.get(URL);
-      const data = await response.data;
-      //   console.log(response);
+      const data = await showCheckItems(id);
       setData(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -35,32 +29,27 @@ export default function CheckItem({ id, cardId }) {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
   };
   const handleChange = async (id, cardId, state) => {
-    console.log(id);
-    console.log(cardId);
-    const newState = state === "complete" ? "incomplete" : "complete";
-    const URL = `https://api.trello.com/1/cards/${cardId}/checkItem/${id}?state=${newState}&key=${API_KEY}&token=${TOKEN}`;
-    const response = await axios.put(URL);
-
-    //   console.log(response);
-    setData((prevList) =>
-      prevList.map((item) =>
-        item.id === id ? { ...item, state: newState } : item
-      )
-    );
-    return response;
+    try {
+      await updateCheckItemState(cardId, id, state, setData);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   return (
     <div>
-      <Box
-        sx={{
-          backgroundColor: "rgb(242, 242, 242)",
-          borderRadius: "1rem",
-          marginBlock: "0.5rem",
-        }}
-      >
+      <Box>
         {data.map((item) => (
-          <div key={item.id} style={{ display: "flex" }}>
+          <div
+            key={item.id}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              borderRadius: "1rem",
+              backgroundColor: "rgb(242, 242, 242)",
+              marginBottom: "0.5rem",
+            }}
+          >
             <FormGroup
               sx={{
                 marginRight: "auto",
@@ -77,11 +66,6 @@ export default function CheckItem({ id, cardId }) {
                 label={item.name}
               />
             </FormGroup>
-            {/* <DeleteCheckItem
-              id={id}
-              checkId={item.id}
-              onDelete={handleDelete}
-            /> */}
             <DeleteButton
               type="checkItem"
               id={id}

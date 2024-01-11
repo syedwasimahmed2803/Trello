@@ -5,6 +5,7 @@ import axios from "axios";
 import Board from "./FeatureComponents/Board";
 import { TOKEN, API_KEY } from "./config";
 import { Box } from "@mui/material";
+import { showBoards } from "./API";
 const URL = `https://api.trello.com/1/members/me/boards?key=${API_KEY}&token=${TOKEN}`;
 
 const Home = () => {
@@ -12,12 +13,10 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(URL);
-      const data = await response.data;
+      const data = await showBoards();
       setData(data);
-      console.log(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching data:", error);
     }
   };
 

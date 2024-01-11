@@ -1,30 +1,23 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { TOKEN, API_KEY } from "../config";
 import CreateCards from "../CreateComponents/CreateCards";
-import DeleteCards from "../laidoffcomponents/DeleteCards";
 import DeleteButton from "../CreateComponents/CreateButton";
 import Checklists from "./Checklists";
+import { showCards } from "../API";
 function Cards({ id }) {
   console.log(id);
   const [data, setData] = useState([]);
-  const URL = ` https://api.trello.com/1/lists/${id}/cards?key=${API_KEY}&token=${TOKEN}`;
-
   const fetchData = async () => {
     try {
-      const response = await axios.get(URL);
-      const data = await response.data;
+      const data = await showCards(id);
       setData(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, [id]);

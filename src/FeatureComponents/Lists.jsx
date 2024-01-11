@@ -1,26 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { TOKEN, API_KEY } from "../config";
 import CreateLists from "../CreateComponents/CreateLists";
 import DeleteButton from "../CreateComponents/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { List } from "react-content-loader";
 
 import Cards from "./Cards";
+import { showLists } from "../API";
 function Lists() {
   const [data, setData] = useState([]);
   const { id } = useParams();
-  const URL = `https://api.trello.com/1/boards/${id}/lists?key=${API_KEY}&token=${TOKEN}`;
   const navigate = useNavigate();
+
   const fetchData = async () => {
     try {
-      const response = await axios.get(URL);
-      const data = await response.data;
+      const data = await showLists(id);
       setData(data);
-      console.log(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching data:", error);
       navigate(`/error`);
     }
   };

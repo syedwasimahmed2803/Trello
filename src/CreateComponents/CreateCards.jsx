@@ -6,25 +6,19 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
-import axios from "axios";
+import { createCard } from "../API";
 
 function CreateCards({ id, onCardCreated }) {
   const [input, setInput] = useState("");
-  const URL = ` https://api.trello.com/1/cards?idList=${id}&name=${input}&key=${API_KEY}&token=${TOKEN}`;
 
   const handleChange = async () => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(URL);
-        console.log(response);
-        if (response.status === 200) {
-          const data = await response.data;
-          onCardCreated(data);
-        }
+        const data = await createCard(id, input);
+        onCardCreated(data);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error fetching data:", error);
       }
     };
 

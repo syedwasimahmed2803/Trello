@@ -6,12 +6,10 @@ import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import Modal from "@mui/material/Modal";
 import { useState, useEffect } from "react";
-import { API_KEY, TOKEN } from "../config";
-import DeleteChecklist from "../laidoffcomponents/DeleteChecklist";
 import DeleteButton from "../CreateComponents/CreateButton";
-import axios from "axios";
 import CreateChecklist from "../CreateComponents/CreateChecklist";
 import CheckItem from "./CheckItem";
+import { showChecklists } from "../API";
 const style = {
   position: "absolute",
   top: "50%",
@@ -30,18 +28,15 @@ export default function Checklists({ id }) {
   const handleClose = () => setOpen(false);
   // console.log(id);
   const [data, setData] = useState([]);
-  const URL = `https://api.trello.com/1/cards/${id}/checklists?key=${API_KEY}&token=${TOKEN}`;
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(URL);
-      const data = await response.data;
+      const data = await showChecklists(id);
       setData(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -57,11 +52,13 @@ export default function Checklists({ id }) {
         style={{
           backgroundColor: "transparent",
           border: "none",
-          width: "14rem",
-          height: "4vh",
+          width: "16rem",
+          height: "5vh",
           position: "absolute",
+          marginTop: "3px",
           top: "0",
           left: "0",
+          cursor: "pointer",
         }}
         onClick={handleOpen}
       ></button>

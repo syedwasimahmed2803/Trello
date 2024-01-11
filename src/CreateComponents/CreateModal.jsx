@@ -8,6 +8,7 @@ import { API_KEY, TOKEN } from "../config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { createBoard } from "../API";
 
 const style = {
   position: "absolute",
@@ -30,20 +31,27 @@ export default function CreateModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const URL = `https://api.trello.com/1/boards/?name=${input}&key=${API_KEY}&token=${TOKEN}`;
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.post(URL);
+    //     console.log(response);
+    //     if (response.status === 200) {
+    //       const data = await response.data;
+    //       console.log(data);
+    //       navigate(`/boards/${data.id}`);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error:", error);
+    //   }
+    // };
     const fetchData = async () => {
       try {
-        const response = await axios.post(URL);
-        console.log(response);
-        if (response.status === 200) {
-          const data = await response.data;
-          console.log(data);
-          navigate(`/boards/${data.id}`);
-        }
+        const data = await createBoard(input);
+        navigate(`/boards/${data.id}`);
       } catch (error) {
-        console.error("Error:", error);
+        console.log("Error Creating Board");
       }
     };
-
     await fetchData();
     setInput("");
     handleClose();
