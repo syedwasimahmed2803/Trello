@@ -1,11 +1,27 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useReducer } from "react";
 import { createCheckItem } from "../API";
 
+const initialState = {
+  input: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_INPUT":
+      return { ...state, input: action.payload };
+    case "RESET_INPUT":
+      return { ...state, input: "" };
+    default:
+      return state;
+  }
+};
+
 function CreateCheckItem({ id, onCheckItemCreated }) {
-  const [input, setInput] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { input } = state;
 
   const handleChange = async () => {
     const fetchData = async () => {
@@ -16,7 +32,7 @@ function CreateCheckItem({ id, onCheckItemCreated }) {
         console.error("Error fetching data:", error);
       }
     };
-    setInput("");
+    dispatch({ type: "RESET_INPUT" });
     await fetchData();
   };
   return (
@@ -26,7 +42,9 @@ function CreateCheckItem({ id, onCheckItemCreated }) {
         value={input}
         label="Enter a title for this checkitem..."
         variant="outlined"
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) =>
+          dispatch({ type: "SET_INPUT", payload: e.target.value })
+        }
         sx={{ marginRight: "auto" }}
       />
       <Button onClick={handleChange} variant="contained">

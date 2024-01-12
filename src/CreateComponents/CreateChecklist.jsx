@@ -6,11 +6,27 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useReducer } from "react";
 import { createChecklist } from "../API";
 
+const initialState = {
+  input: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_INPUT":
+      return { ...state, input: action.payload };
+    case "RESET_INPUT":
+      return { ...state, input: "" };
+    default:
+      return state;
+  }
+};
+
 function CreateChecklist({ id, onChecklistCreated }) {
-  const [input, setInput] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { input } = state;
 
   const handleChange = async () => {
     const fetchData = async () => {
@@ -22,9 +38,10 @@ function CreateChecklist({ id, onChecklistCreated }) {
       }
     };
 
-    setInput("");
+    dispatch({ type: "RESET_INPUT" });
     await fetchData();
   };
+
   return (
     <Accordion
       sx={{
@@ -55,7 +72,9 @@ function CreateChecklist({ id, onChecklistCreated }) {
             value={input}
             label="Enter a title for this checklist..."
             variant="outlined"
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) =>
+              dispatch({ type: "SET_INPUT", payload: e.target.value })
+            }
           />
           <Button onClick={handleChange} variant="contained">
             Add Checklist
