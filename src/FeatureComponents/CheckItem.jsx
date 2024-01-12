@@ -22,6 +22,15 @@ const reducer = (state, action) => {
         ...state,
         data: state.data.filter((item) => item.id !== action.payload),
       };
+    case "UPDATE_CHECKITEM_STATE":
+      return {
+        ...state,
+        data: state.data.map((item) =>
+          item.id === action.payload.checkItemId
+            ? { ...item, state: action.payload.updatedState }
+            : item
+        ),
+      };
     default:
       return state;
   }
@@ -48,13 +57,23 @@ export default function CheckItem({ id, cardId }) {
   const handleDelete = (deletedId) => {
     dispatch({ type: "DELETE_CHECKITEM", payload: deletedId });
   };
-  // const handleChange = async (id, cardId, state) => {
-  //   try {
-  //     await updateCheckItemState(cardId, id, state, setData);
-  //   } catch (error) {
-  //     console.error("Error deleting item:", error);
-  //   }
-  // };
+  const handleChange = async (checkItemId, checkItemState) => {
+    console.log("Handling change:", checkItemId, checkItemState);
+    try {
+      const updatedState = await updateCheckItemState(
+        cardId,
+        checkItemId,
+        checkItemState
+      );
+      console.log(updatedState);
+      dispatch({
+        type: "UPDATE_CHECKITEM_STATE",
+        payload: { checkItemId, updatedState },
+      });
+    } catch (error) {
+      console.error("Error updating item state:", error);
+    }
+  };
 
   return (
     <div>
@@ -79,8 +98,8 @@ export default function CheckItem({ id, cardId }) {
               <FormControlLabel
                 control={
                   <Checkbox
-                    defaultChecked={item.state === "complete" ? true : false}
-                    // onChange={() => handleChange(item.id, cardId, item.state)}
+                    defaultChecked={item.state === "complete"}
+                    onChange={() => handleChange(item.id, item.state)}
                   />
                 }
                 label={item.name}
