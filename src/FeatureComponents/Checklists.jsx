@@ -5,7 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import Modal from "@mui/material/Modal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import DeleteButton from "../CreateComponents/CreateButton";
 import CreateChecklist from "../CreateComponents/CreateChecklist";
 import CheckItem from "./CheckItem";
@@ -21,30 +21,53 @@ const style = {
   borderRadius: "1rem",
   p: 4,
 };
+const initialState = {
+  data: [],
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "FETCH_SUCCESS":
+      return { ...state, data: action.payload };
+    case "ADD_CHECKLIST":
+      return { ...state, data: [...state.data, action.payload] };
+    case "DELETE_CHECKLIST":
+      return {
+        ...state,
+        data: state.data.filter((item) => item.id !== action.payload),
+      };
+    default:
+      return state;
+  }
+};
 
 export default function Checklists({ id }) {
   const [open, setOpen] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { data } = state;
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(id);
-  const [data, setData] = useState([]);
 
   const fetchData = async () => {
     try {
       const data = await showChecklists(id);
-      setData(data);
+      dispatch({ type: "FETCH_SUCCESS", payload: data });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
+
   const handleChecklistCreated = (newData) => {
-    setData((prevList) => [...prevList, newData]);
+    dispatch({ type: "ADD_CHECKLIST", payload: newData });
   };
+
   const handleDelete = (deletedId) => {
-    setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    dispatch({ type: "DELETE_CHECKLIST", payload: deletedId });
   };
   return (
     <div>
