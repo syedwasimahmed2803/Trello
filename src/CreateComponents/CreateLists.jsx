@@ -8,20 +8,23 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import { createList } from "../API";
+import { useDispatch, useSelector } from "react-redux";
+import { listActions } from "../store/ListSlice";
 
-export default function CreateLists({ id, onListCreated }) {
-  const [input, setInput] = useState("");
+export default function CreateLists({ id }) {
+  const dispatch = useDispatch();
+  const listName = useSelector((state) => state.list.newlistName);
 
   const handleChange = async () => {
     const fetchData = async () => {
       try {
-        const data = await createList(id, input);
-        onListCreated(data);
+        const data = await createList(id, listName);
+        dispatch(listActions.createList(data));
+        dispatch(listActions.resetCheckListName());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    setInput("");
     await fetchData();
   };
 
@@ -55,10 +58,12 @@ export default function CreateLists({ id, onListCreated }) {
           >
             <TextField
               id="outlined-basic"
-              value={input}
+              value={listName}
               label="Enter list title..."
               variant="outlined"
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) =>
+                dispatch(listActions.setListName(e.target.value))
+              }
             />
             <Button onClick={handleChange} variant="contained">
               add list

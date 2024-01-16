@@ -4,21 +4,23 @@ import CreateLists from "../CreateComponents/CreateLists";
 import DeleteButton from "../CreateComponents/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { List } from "react-content-loader";
-
 import Cards from "./Cards";
 import { showLists } from "../API";
 import { useBoardContext } from "../Background";
+import { useDispatch, useSelector } from "react-redux";
+import { listActions } from "../store/ListSlice";
 function Lists() {
-  const [data, setData] = useState([]);
-  const [loadState, setLoadState] = useState(true);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.list.data);
+  const loadState = useSelector((state) => state.list.loadState);
   const { id } = useParams();
   const { backgroundImageObject, backgroundColorObject } = useBoardContext();
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
       const data = await showLists(id);
-      setData(data);
-      setLoadState(false);
+      dispatch(listActions.getListData(data));
+      dispatch(listActions.toggleLoad(false));
     } catch (error) {
       console.error("Error fetching data:", error);
       navigate(`/error`);
@@ -28,12 +30,9 @@ function Lists() {
   useEffect(() => {
     fetchData();
   }, [id]);
-  const handleListCreated = (newData) => {
-    setData((prevList) => [...prevList, newData]);
-  };
 
   const handleDelete = (deletedId) => {
-    setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    dispatch(listActions.deleteList(deletedId));
   };
 
   return (
@@ -110,7 +109,7 @@ function Lists() {
             <List />
           </div>
         )}
-        <CreateLists id={id} onListCreated={handleListCreated} />
+        <CreateLists id={id} />
       </div>
     </div>
   );

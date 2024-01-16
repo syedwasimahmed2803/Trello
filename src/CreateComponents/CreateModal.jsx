@@ -24,7 +24,6 @@ const style = {
 
 export default function CreateModal() {
   const dispatch = useDispatch();
-  const board = useSelector((state) => state.board.data);
   const boardName = useSelector((state) => state.board.newBoardName);
   const open = useSelector((state) => state.board.open);
   const handleOpen = () => {

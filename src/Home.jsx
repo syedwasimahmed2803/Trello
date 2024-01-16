@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Instagram } from "react-content-loader";
 import Board from "./FeatureComponents/Board";
 import { Box } from "@mui/material";
