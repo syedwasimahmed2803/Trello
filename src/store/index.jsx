@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import CheckListSlice from "./CheckListSlice";
-import CheckListItemSlice from "./CheckListItemSlice";
+import BoardSlice from "./BoardSlice";
 export const store = configureStore({
   reducer: {
     checkList: CheckListSlice.reducer,
-    checkListItem: CheckListItemSlice.reducer,
+    board: BoardSlice.reducer,
   },
 });

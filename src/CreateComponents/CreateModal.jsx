@@ -7,6 +7,8 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBoard } from "../API";
+import { useDispatch, useSelector } from "react-redux";
+import { boardActions } from "../store/BoardSlice";
 
 const style = {
   position: "absolute",
@@ -21,24 +23,30 @@ const style = {
 };
 
 export default function CreateModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+  const board = useSelector((state) => state.board.data);
+  const boardName = useSelector((state) => state.board.newBoardName);
+  const open = useSelector((state) => state.board.open);
+  const handleOpen = () => {
+    dispatch(boardActions.toggleModal());
+    handleSubmit();
+  };
+  const handleClose = () => {
+    dispatch(boardActions.toggleModal());
+  };
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const fetchData = async () => {
       try {
-        const data = await createBoard(input);
+        const data = await createBoard(boardName);
         navigate(`/boards/${data.id}`);
       } catch (error) {
         console.log("Error Creating Board");
       }
     };
     await fetchData();
-    setInput("");
     handleClose();
   };
 
@@ -75,10 +83,12 @@ export default function CreateModal() {
           >
             <TextField
               id="outlined-basic"
-              value={input}
+              value={boardName}
               label="Enter Board Name..."
               variant="outlined"
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) =>
+                dispatch(boardActions.setBoardName(e.target.value))
+              }
               sx={{ marginRight: "auto" }}
             />
             <Button onClick={handleSubmit} variant="contained">

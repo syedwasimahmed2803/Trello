@@ -3,14 +3,17 @@ import { Instagram } from "react-content-loader";
 import Board from "./FeatureComponents/Board";
 import { Box } from "@mui/material";
 import { showBoards } from "./API";
+import { useDispatch, useSelector } from "react-redux";
+import { boardActions } from "./store/BoardSlice";
 
 const Home = () => {
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.board.data);
 
   const fetchData = async () => {
     try {
       const data = await showBoards();
-      setData(data);
+      dispatch(boardActions.getBoardData(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     }

@@ -1,22 +1,19 @@
 import Box from "@mui/material/Box";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import DeleteButton from "../CreateComponents/CreateButton";
 import CreateCheckItem from "../CreateComponents/CreateCheckItem";
 import { showCheckItems, updateCheckItemState } from "../API";
-import { checklistItemActions } from "../store/CheckListItemSlice";
-import { useEffect } from "react";
+
 export default function CheckItem({ id, cardId }) {
-  const dispatch = useDispatch();
-  const checklistitem = useSelector(
-    (state) => state.checkListItem.checklistitem
-  );
+  console.log(id);
+  const [data, setData] = useState([]);
   const fetchData = async () => {
     try {
       const data = await showCheckItems(id);
-      dispatch(checklistItemActions.getCheckListItemData(data));
+      setData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -25,31 +22,24 @@ export default function CheckItem({ id, cardId }) {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleDelete = (deletedId) => {
-    dispatch(checklistItemActions.deleteCheckListItem(deletedId));
+  const handleCheckItemCreated = (newData) => {
+    setData((prevList) => [...prevList, newData]);
   };
-  const handleChange = async (checkItemId, checkItemState) => {
-    console.log("Handling change:", checkItemId, checkItemState);
+  const handleDelete = (deletedId) => {
+    setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+  };
+  const handleChange = async (id, cardId, state) => {
     try {
-      const updatedState = await updateCheckItemState(
-        cardId,
-        checkItemId,
-        checkItemState
-      );
-      console.log(updatedState);
-      dispatch(
-        checklistItemActions.updateCheckItem({ checkItemId, updatedState })
-      );
+      await updateCheckItemState(cardId, id, state, setData);
     } catch (error) {
-      console.error("Error updating item state:", error);
+      console.error("Error deleting item:", error);
     }
   };
 
   return (
     <div>
       <Box>
-        {checklistitem.map((item) => (
+        {data.map((item) => (
           <div
             key={item.id}
             style={{
@@ -69,8 +59,8 @@ export default function CheckItem({ id, cardId }) {
               <FormControlLabel
                 control={
                   <Checkbox
-                    defaultChecked={item.state === "complete"}
-                    onChange={() => handleChange(item.id, item.state)}
+                    defaultChecked={item.state === "complete" ? true : false}
+                    onChange={() => handleChange(item.id, cardId, item.state)}
                   />
                 }
                 label={item.name}
@@ -85,7 +75,7 @@ export default function CheckItem({ id, cardId }) {
           </div>
         ))}
       </Box>
-      <CreateCheckItem id={id} key={id} />
+      <CreateCheckItem id={id} onCheckItemCreated={handleCheckItemCreated} />
     </div>
   );
 }
