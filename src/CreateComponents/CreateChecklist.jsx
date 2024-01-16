@@ -6,39 +6,24 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useReducer } from "react";
 import { createChecklist } from "../API";
+import { useDispatch, useSelector } from "react-redux";
+import { checklistActions } from "../store/CheckListSlice";
 
-const initialState = {
-  input: "",
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_INPUT":
-      return { ...state, input: action.payload };
-    case "RESET_INPUT":
-      return { ...state, input: "" };
-    default:
-      return state;
-  }
-};
-
-function CreateChecklist({ id, onChecklistCreated }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { input } = state;
-
+function CreateChecklist({ id }) {
+  const dispatch = useDispatch();
+  const checklist = useSelector((state) => state.checkList.newCheckListName);
   const handleChange = async () => {
     const fetchData = async () => {
       try {
-        const data = await createChecklist(id, input);
-        onChecklistCreated(data);
+        const data = await createChecklist(id, checklist);
+        dispatch(checklistActions.createCheckList(data));
+        dispatch(checklistActions.resetCheckListName());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    dispatch({ type: "RESET_INPUT" });
     await fetchData();
   };
 
@@ -69,11 +54,11 @@ function CreateChecklist({ id, onChecklistCreated }) {
         >
           <TextField
             id="outlined-basic"
-            value={input}
+            value={checklist}
             label="Enter a title for this checklist..."
             variant="outlined"
             onChange={(e) =>
-              dispatch({ type: "SET_INPUT", payload: e.target.value })
+              dispatch(checklistActions.setCheckListName(e.target.value))
             }
           />
           <Button onClick={handleChange} variant="contained">

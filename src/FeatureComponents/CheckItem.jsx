@@ -1,48 +1,22 @@
 import Box from "@mui/material/Box";
-import { useEffect, useReducer } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import DeleteButton from "../CreateComponents/CreateButton";
 import CreateCheckItem from "../CreateComponents/CreateCheckItem";
 import { showCheckItems, updateCheckItemState } from "../API";
-
-const initialState = {
-  data: [],
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "FETCH_SUCCESS":
-      return { ...state, data: action.payload };
-    case "ADD_CHECKITEM":
-      return { ...state, data: [...state.data, action.payload] };
-    case "DELETE_CHECKITEM":
-      return {
-        ...state,
-        data: state.data.filter((item) => item.id !== action.payload),
-      };
-    case "UPDATE_CHECKITEM_STATE":
-      return {
-        ...state,
-        data: state.data.map((item) =>
-          item.id === action.payload.checkItemId
-            ? { ...item, state: action.payload.updatedState }
-            : item
-        ),
-      };
-    default:
-      return state;
-  }
-};
-
+import { checklistItemActions } from "../store/CheckListItemSlice";
+import { useEffect } from "react";
 export default function CheckItem({ id, cardId }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { data } = state;
+  const dispatch = useDispatch();
+  const checklistitem = useSelector(
+    (state) => state.checkListItem.checklistitem
+  );
   const fetchData = async () => {
     try {
       const data = await showCheckItems(id);
-      dispatch({ type: "FETCH_SUCCESS", payload: data });
+      dispatch(checklistItemActions.getCheckListItemData(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -51,11 +25,9 @@ export default function CheckItem({ id, cardId }) {
   useEffect(() => {
     fetchData();
   }, []);
-  const handleCheckItemCreated = (newData) => {
-    dispatch({ type: "ADD_CHECKITEM", payload: newData });
-  };
+
   const handleDelete = (deletedId) => {
-    dispatch({ type: "DELETE_CHECKITEM", payload: deletedId });
+    dispatch(checklistItemActions.deleteCheckListItem(deletedId));
   };
   const handleChange = async (checkItemId, checkItemState) => {
     console.log("Handling change:", checkItemId, checkItemState);
@@ -66,10 +38,9 @@ export default function CheckItem({ id, cardId }) {
         checkItemState
       );
       console.log(updatedState);
-      dispatch({
-        type: "UPDATE_CHECKITEM_STATE",
-        payload: { checkItemId, updatedState },
-      });
+      dispatch(
+        checklistItemActions.updateCheckItem({ checkItemId, updatedState })
+      );
     } catch (error) {
       console.error("Error updating item state:", error);
     }
@@ -78,7 +49,7 @@ export default function CheckItem({ id, cardId }) {
   return (
     <div>
       <Box>
-        {data.map((item) => (
+        {checklistitem.map((item) => (
           <div
             key={item.id}
             style={{
@@ -114,7 +85,7 @@ export default function CheckItem({ id, cardId }) {
           </div>
         ))}
       </Box>
-      <CreateCheckItem id={id} onCheckItemCreated={handleCheckItemCreated} />
+      <CreateCheckItem id={id} key={id} />
     </div>
   );
 }
