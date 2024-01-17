@@ -6,7 +6,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
 import { createList } from "../API";
 import { useDispatch, useSelector } from "react-redux";
 import { listActions } from "../store/ListSlice";
