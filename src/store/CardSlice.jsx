@@ -27,7 +27,7 @@ const CardSlice = createSlice({
       }
     },
 
-    deleteCheckItem(state, action) {
+    deleteCards(state, action) {
       state.cardsData = state.cardsData.map((item) => {
         return {
           ...item,
@@ -36,7 +36,7 @@ const CardSlice = createSlice({
       });
       return state;
     },
-    createCheckItem(state, action) {
+    createCards(state, action) {
       const { data, id } = action.payload;
 
       const cardIndex = state.newCardName.findIndex((item) => item.id === id);
@@ -48,7 +48,7 @@ const CardSlice = createSlice({
 
       return state;
     },
-    setcheckItemName(state, action) {
+    setCardName(state, action) {
       const existingCheckItem = state.newCardName.find(
         (item) => item.id === action.payload.id
       );
@@ -63,10 +63,10 @@ const CardSlice = createSlice({
       }
     },
 
-    resetcheckItemName(state) {
+    resetCardName(state) {
       state.newCardName = [];
     },
-    updatecheckItem(state, action) {
+    updateCards(state, action) {
       state.cardsData = state.cardsData.map((item) => {
         return {
           ...item,

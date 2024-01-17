@@ -6,23 +6,25 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
 import { createCard } from "../API";
+import { useDispatch, useSelector } from "react-redux";
+import { CardActions } from "../store/CardSlice";
 
-function CreateCards({ id, onCardCreated }) {
-  const [input, setInput] = useState("");
-
+function CreateCards({ id }) {
+  const dispatch = useDispatch();
+  const newCardName = useSelector((state) =>
+    state.cards.newCardName.find((item) => item.id === id)
+  );
   const handleChange = async () => {
     const fetchData = async () => {
       try {
-        const data = await createCard(id, input);
-        onCardCreated(data);
+        const data = await createCard(id, newCardName.name);
+        dispatch(CardActions.createCards({ data, id }));
+        dispatch(CardActions.resetCardName());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
-    setInput("");
     await fetchData();
   };
   return (
@@ -52,10 +54,12 @@ function CreateCards({ id, onCardCreated }) {
         >
           <TextField
             id="outlined-basic"
-            value={input}
+            value={newCardName ? newCardName.name : ""}
             label="Enter a title for this card..."
             variant="outlined"
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              dispatch(CardActions.setCardName({ value: e.target.value, id }));
+            }}
           />
           <Button onClick={handleChange} variant="contained">
             Add card
