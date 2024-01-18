@@ -10,6 +10,9 @@ import DeleteButton from "../CreateComponents/CreateButton";
 import CreateChecklist from "../CreateComponents/CreateChecklist";
 import CheckItem from "./CheckItem";
 import { showChecklists } from "../API";
+import Alert from "@mui/material/Alert";
+import InfoIcon from "@mui/icons-material/Info";
+import Snackbar from "@mui/material/Snackbar";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,7 +29,15 @@ export default function Checklists({ id }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(id);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -45,6 +56,7 @@ export default function Checklists({ id }) {
   };
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    handleSnackbarOpen();
   };
   return (
     <div>
@@ -102,6 +114,15 @@ export default function Checklists({ id }) {
           />
         </Box>
       </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+          Checklist Successfully Deleted
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

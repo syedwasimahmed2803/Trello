@@ -70,10 +70,16 @@ const Home = () => {
                 alignItems: "center",
               }}
             >
-              <Instagram style={{ marginInline: "1vw" }} />
-              <Instagram style={{ marginInline: "1vw" }} />
-              <Instagram style={{ marginInline: "1vw" }} />
-              <Instagram style={{ marginInline: "1vw" }} />
+              <div
+                style={{
+                  display: "flex",
+                }}
+              >
+                <Instagram style={{ marginInline: "1vw" }} />
+                <Instagram style={{ marginInline: "1vw" }} />
+                <Instagram style={{ marginInline: "1vw" }} />
+                <Instagram style={{ marginInline: "1vw" }} />
+              </div>
             </div>
           )}
         </div>

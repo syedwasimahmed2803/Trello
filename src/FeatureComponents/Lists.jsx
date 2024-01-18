@@ -4,13 +4,25 @@ import CreateLists from "../CreateComponents/CreateLists";
 import DeleteButton from "../CreateComponents/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { List } from "react-content-loader";
-
+import Alert from "@mui/material/Alert";
+import InfoIcon from "@mui/icons-material/Info";
+import Snackbar from "@mui/material/Snackbar";
 import Cards from "./Cards";
 import { showLists } from "../API";
 import { useBoardContext } from "../Background";
 function Lists() {
   const [data, setData] = useState([]);
   const [loadState, setLoadState] = useState(true);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
+
   const { id } = useParams();
   const { backgroundImageObject, backgroundColorObject } = useBoardContext();
   const navigate = useNavigate();
@@ -34,6 +46,7 @@ function Lists() {
 
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    handleSnackbarOpen();
   };
 
   return (
@@ -112,6 +125,15 @@ function Lists() {
         )}
         <CreateLists id={id} onListCreated={handleListCreated} />
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+          List Successfully Deleted
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

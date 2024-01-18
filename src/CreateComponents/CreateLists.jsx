@@ -6,17 +6,30 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
 import { createList } from "../API";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 
 export default function CreateLists({ id, onListCreated }) {
   const [input, setInput] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
 
   const handleChange = async () => {
     const fetchData = async () => {
       try {
         const data = await createList(id, input);
         onListCreated(data);
+        handleSnackbarOpen(); // Open Snackbar on successful creation
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -66,6 +79,16 @@ export default function CreateLists({ id, onListCreated }) {
           </Box>
         </AccordionDetails>
       </Accordion>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+          List Successfully Created
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

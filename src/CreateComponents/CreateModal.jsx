@@ -7,7 +7,9 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBoard } from "../API";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,6 +27,15 @@ export default function CreateModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [input, setInput] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +44,7 @@ export default function CreateModal() {
       try {
         const data = await createBoard(input);
         navigate(`/boards/${data.id}`);
+        handleSnackbarOpen();
       } catch (error) {
         console.log("Error Creating Board");
       }
@@ -87,6 +99,15 @@ export default function CreateModal() {
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+          Board Successfully Created
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

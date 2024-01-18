@@ -7,9 +7,21 @@ import CreateCards from "../CreateComponents/CreateCards";
 import DeleteButton from "../CreateComponents/CreateButton";
 import Checklists from "./Checklists";
 import { showCards } from "../API";
+import Alert from "@mui/material/Alert";
+import InfoIcon from "@mui/icons-material/Info";
+import Snackbar from "@mui/material/Snackbar";
 function Cards({ id }) {
   console.log(id);
   const [data, setData] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
   const fetchData = async () => {
     try {
       const data = await showCards(id);
@@ -26,6 +38,7 @@ function Cards({ id }) {
   };
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    handleSnackbarOpen();
   };
   return (
     <>
@@ -63,6 +76,15 @@ function Cards({ id }) {
         ))}
       </List>
       <CreateCards id={id} onCardCreated={handleCardCreated} />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+          Card Successfully Deleted
+        </Alert>
+      </Snackbar>
     </>
   );
 }

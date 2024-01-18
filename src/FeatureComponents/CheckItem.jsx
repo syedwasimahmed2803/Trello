@@ -6,10 +6,21 @@ import Checkbox from "@mui/material/Checkbox";
 import DeleteButton from "../CreateComponents/CreateButton";
 import CreateCheckItem from "../CreateComponents/CreateCheckItem";
 import { showCheckItems, updateCheckItemState } from "../API";
-
+import Alert from "@mui/material/Alert";
+import InfoIcon from "@mui/icons-material/Info";
+import Snackbar from "@mui/material/Snackbar";
 export default function CheckItem({ id, cardId }) {
   console.log(id);
   const [data, setData] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
   const fetchData = async () => {
     try {
       const data = await showCheckItems(id);
@@ -27,6 +38,7 @@ export default function CheckItem({ id, cardId }) {
   };
   const handleDelete = (deletedId) => {
     setData((prevList) => prevList.filter((item) => item.id !== deletedId));
+    handleSnackbarOpen();
   };
   const handleChange = async (id, cardId, state) => {
     try {
@@ -76,6 +88,15 @@ export default function CheckItem({ id, cardId }) {
         ))}
       </Box>
       <CreateCheckItem id={id} onCheckItemCreated={handleCheckItemCreated} />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+          Checkitem Successfully Deleted
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
