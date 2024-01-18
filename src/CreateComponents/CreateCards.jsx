@@ -8,25 +8,27 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { createCard } from "../API";
 import { useDispatch, useSelector } from "react-redux";
-import { CardActions } from "../store/CardSlice";
+import { cardActions } from "../store/CardSlice"; // Update import statement
 
 function CreateCards({ id }) {
   const dispatch = useDispatch();
-  const newCardName = useSelector((state) =>
-    state.cards.newCardName.find((item) => item.id === id)
+  const newCardName = useSelector(
+    (state) => state.cards.newCardName[id] // Update the selector to use newCardName[id]
   );
+
   const handleChange = async () => {
     const fetchData = async () => {
       try {
-        const data = await createCard(id, newCardName.name);
-        dispatch(CardActions.createCards({ data, id }));
-        dispatch(CardActions.resetCardName());
+        const data = await createCard(id, newCardName);
+        dispatch(cardActions.createCards({ data, id })); // Update action payload
+        dispatch(cardActions.resetCardName());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     await fetchData();
   };
+
   return (
     <Accordion
       sx={{
@@ -54,11 +56,11 @@ function CreateCards({ id }) {
         >
           <TextField
             id="outlined-basic"
-            value={newCardName ? newCardName.name : ""}
+            value={newCardName ? newCardName : ""}
             label="Enter a title for this card..."
             variant="outlined"
             onChange={(e) => {
-              dispatch(CardActions.setCardName({ value: e.target.value, id }));
+              dispatch(cardActions.setCardName({ value: e.target.value, id }));
             }}
           />
           <Button onClick={handleChange} variant="contained">

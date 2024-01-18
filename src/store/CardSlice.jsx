@@ -1,87 +1,46 @@
+// cardSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
-const CardSlice = createSlice({
+const cardSlice = createSlice({
   name: "cards",
   initialState: {
-    cardsData: [],
-    newCardName: [],
+    cardsData: {}, // Object with cardId as keys and cardData as values
+    newCardName: {}, // Object with cardId as keys and newCardName as values
   },
   reducers: {
     getCard(state, action) {
-      const cardIndex = state.cardsData.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      if (cardIndex === -1) {
-        state.cardsData.push({
-          id: action.payload.id,
-          data: action.payload.cardsData,
-        });
-      } else {
-        state.cardsData.map((item) => {
-          if (item.id == action.payload.id) {
-            return { ...item, data: action.payload.cardsData };
-          } else {
-            return item;
-          }
-        });
-      }
+      const { id, cardsData } = action.payload;
+      state.cardsData[id] = { data: cardsData };
     },
 
-    deleteCards(state, action) {
-      state.cardsData = state.cardsData.map((item) => {
-        return {
-          ...item,
-          data: item.data.filter((value) => value.id !== action.payload),
-        };
-      });
-      return state;
+    deleteCard(state, action) {
+      const { deletedId } = action.payload;
+      delete state.cardsData[deletedId];
     },
     createCards(state, action) {
       const { data, id } = action.payload;
-
-      const cardIndex = state.newCardName.findIndex((item) => item.id === id);
-      if (cardIndex !== -1) {
-        state.cardsData[cardIndex].data.push(data);
+      if (state.cardsData[id]) {
+        state.cardsData[id].data.push(data);
       } else {
-        state.cardsData.push({ id: id, data: [data] });
+        state.cardsData[id] = { data: [data] };
       }
-
-      return state;
     },
     setCardName(state, action) {
-      const existingCheckItem = state.newCardName.find(
-        (item) => item.id === action.payload.id
-      );
-
-      if (existingCheckItem) {
-        existingCheckItem.name = action.payload.value;
-      } else {
-        state.newCardName.push({
-          id: action.payload.id,
-          name: action.payload.value,
-        });
-      }
+      const { id, value } = action.payload;
+      state.newCardName[id] = value;
     },
 
     resetCardName(state) {
-      state.newCardName = [];
+      state.newCardName = {};
     },
     updateCards(state, action) {
-      state.cardsData = state.cardsData.map((item) => {
-        return {
-          ...item,
-          data: item.data.map((a) => {
-            if (a.id === action.payload.id) {
-              return { ...a, state: action.payload.updatedCard };
-            } else {
-              return a;
-            }
-          }),
-        };
-      });
+      const { id, updatedCard } = action.payload;
+      state.cardsData[id].data = state.cardsData[id].data.map((card) =>
+        card.id === id ? { ...card, state: updatedCard } : card
+      );
     },
   },
 });
 
-export const CardActions = CardSlice.actions;
-export default CardSlice;
+export const cardActions = cardSlice.actions;
+export default cardSlice;

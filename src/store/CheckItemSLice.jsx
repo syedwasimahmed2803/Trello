@@ -1,86 +1,43 @@
+// checkItemSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const checkItemSlice = createSlice({
   name: "checkItem",
   initialState: {
-    checkItemsData: [],
-    newCheckItemName: [],
+    checkItems: {}, // Object with checklistId as keys and checkItemsData as values
+    newCheckItemName: {}, // Object with checklistId as keys and newCheckItem name as values
   },
   reducers: {
     getCheckItem(state, action) {
-      const checklistIndex = state.checkItemsData.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      if (checklistIndex === -1) {
-        state.checkItemsData.push({
-          id: action.payload.id,
-          data: action.payload.checkItemsData,
-        });
-      } else {
-        state.checkItemsData.map((item) => {
-          if (item.idChecklist == action.payload.id) {
-            return { ...item, data: action.payload.checkItemsData };
-          } else {
-            return item;
-          }
-        });
-      }
+      const { checklistId, checkItemsData } = action.payload;
+      state.checkItems[checklistId] = { data: checkItemsData };
     },
 
     deleteCheckItem(state, action) {
-      state.checkItemsData = state.checkItemsData.map((item) => {
-        return {
-          ...item,
-          data: item.data.filter((value) => value.id !== action.payload),
-        };
-      });
-      return state;
+      const { checklistId, checkItemId } = action.payload;
+      state.checkItems[checklistId].data = state.checkItems[
+        checklistId
+      ].data.filter((item) => item.id !== checkItemId);
     },
     createCheckItem(state, action) {
-      const { data, id } = action.payload;
+      const { newCheckItem, checklistId } = action.payload;
+      state.checkItems[checklistId].data.push(newCheckItem);
+    },
+    setCheckItemName(state, action) {
+      const { checklistId, value } = action.payload;
+      state.newCheckItemName[checklistId] = value;
+    },
 
-      const checklistIndex = state.newCheckItemName.findIndex(
-        (item) => item.id === id
+    resetCheckItemName(state, action) {
+      state.newCheckItemName = {};
+    },
+    updateCheckItem(state, action) {
+      const { checklistId, checkItemId, updatedCheckItem } = action.payload;
+      state.checkItems[checklistId].data = state.checkItems[
+        checklistId
+      ].data.map((item) =>
+        item.id === checkItemId ? { ...item, state: updatedCheckItem } : item
       );
-      if (checklistIndex !== -1) {
-        state.checkItemsData[checklistIndex].data.push(data);
-      } else {
-        state.checkItemsData.push({ id: id, data: [data] });
-      }
-
-      return state;
-    },
-    setcheckItemName(state, action) {
-      const existingCheckItem = state.newCheckItemName.find(
-        (item) => item.id === action.payload.id
-      );
-
-      if (existingCheckItem) {
-        existingCheckItem.name = action.payload.value;
-      } else {
-        state.newCheckItemName.push({
-          id: action.payload.id,
-          name: action.payload.value,
-        });
-      }
-    },
-
-    resetcheckItemName(state) {
-      state.newCheckItemName = [];
-    },
-    updatecheckItem(state, action) {
-      state.checkItemsData = state.checkItemsData.map((item) => {
-        return {
-          ...item,
-          data: item.data.map((a) => {
-            if (a.id === action.payload.checkItemId) {
-              return { ...a, state: action.payload.updatedCheckItem };
-            } else {
-              return a;
-            }
-          }),
-        };
-      });
     },
   },
 });
