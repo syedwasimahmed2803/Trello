@@ -15,13 +15,19 @@ import CheckIcon from "@mui/icons-material/Check";
 export default function CreateLists({ id, onListCreated }) {
   const [input, setInput] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarErrorOpen, setSnackbarErrorOpen] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setSnackbarErrorOpen(false);
   };
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
+  };
+
+  const handleSnackbarErrorOpen = () => {
+    setSnackbarErrorOpen(true);
   };
 
   const handleChange = async () => {
@@ -32,6 +38,7 @@ export default function CreateLists({ id, onListCreated }) {
         handleSnackbarOpen(); // Open Snackbar on successful creation
       } catch (error) {
         console.error("Error fetching data:", error);
+        handleSnackbarErrorOpen(); // Open Snackbar on error
       }
     };
     setInput("");
@@ -88,6 +95,14 @@ export default function CreateLists({ id, onListCreated }) {
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
           List Successfully Created
         </Alert>
+      </Snackbar>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarErrorOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity="error">Error creating list. Please try again.</Alert>
       </Snackbar>
     </div>
   );

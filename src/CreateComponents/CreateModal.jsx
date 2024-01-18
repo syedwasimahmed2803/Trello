@@ -28,15 +28,23 @@ export default function CreateModal() {
   const handleClose = () => setOpen(false);
   const [input, setInput] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarErrorOpen, setSnackbarErrorOpen] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setSnackbarErrorOpen(false);
   };
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
   };
+
+  const handleSnackbarErrorOpen = () => {
+    setSnackbarErrorOpen(true);
+  };
+
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +55,7 @@ export default function CreateModal() {
         handleSnackbarOpen();
       } catch (error) {
         console.log("Error Creating Board");
+        handleSnackbarErrorOpen();
       }
     };
     await fetchData();
@@ -107,6 +116,14 @@ export default function CreateModal() {
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
           Board Successfully Created
         </Alert>
+      </Snackbar>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarErrorOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity="error">Error creating Board. Please try again.</Alert>
       </Snackbar>
     </div>
   );

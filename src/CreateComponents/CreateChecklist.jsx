@@ -15,14 +15,21 @@ import CheckIcon from "@mui/icons-material/Check";
 function CreateChecklist({ id, onChecklistCreated }) {
   const [input, setInput] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarErrorOpen, setSnackbarErrorOpen] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setSnackbarErrorOpen(false);
   };
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
   };
+
+  const handleSnackbarErrorOpen = () => {
+    setSnackbarErrorOpen(true);
+  };
+
   const handleChange = async () => {
     const fetchData = async () => {
       try {
@@ -31,12 +38,14 @@ function CreateChecklist({ id, onChecklistCreated }) {
         handleSnackbarOpen();
       } catch (error) {
         console.error("Error fetching data:", error);
+        handleSnackbarErrorOpen();
       }
     };
 
     setInput("");
     await fetchData();
   };
+
   return (
     <>
       <Accordion
@@ -83,6 +92,16 @@ function CreateChecklist({ id, onChecklistCreated }) {
       >
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
           Checklist Successfully Created
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarErrorOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity="error">
+          Error creating Checklist. Please try again.
         </Alert>
       </Snackbar>
     </>

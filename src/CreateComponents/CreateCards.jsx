@@ -15,14 +15,21 @@ import CheckIcon from "@mui/icons-material/Check";
 function CreateCards({ id, onCardCreated }) {
   const [input, setInput] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarErrorOpen, setSnackbarErrorOpen] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setSnackbarErrorOpen(false);
   };
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
   };
+
+  const handleSnackbarErrorOpen = () => {
+    setSnackbarErrorOpen(true);
+  };
+
   const handleChange = async () => {
     const fetchData = async () => {
       try {
@@ -30,13 +37,15 @@ function CreateCards({ id, onCardCreated }) {
         onCardCreated(data);
         handleSnackbarOpen();
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error creating card:", error);
+        handleSnackbarErrorOpen();
       }
     };
 
     setInput("");
     await fetchData();
   };
+
   return (
     <>
       <Accordion
@@ -84,6 +93,13 @@ function CreateCards({ id, onCardCreated }) {
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
           Card Successfully Created
         </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackbarErrorOpen}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity="error">Error creating card. Please try again.</Alert>
       </Snackbar>
     </>
   );
