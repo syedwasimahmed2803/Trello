@@ -11,7 +11,6 @@ import { createCard } from "../API";
 
 function CreateCards({ id, onCardCreated }) {
   const [input, setInput] = useState("");
-
   const handleChange = async () => {
     const fetchData = async () => {
       try {

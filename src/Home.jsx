@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { Instagram } from "react-content-loader";
-import Skeleton from "@mui/material/Skeleton";
-import axios from "axios";
+import Alert from "@mui/material/Alert";
 import Board from "./FeatureComponents/Board";
-import { TOKEN, API_KEY } from "./config";
 import { Box } from "@mui/material";
 import { showBoards } from "./API";
-const URL = `https://api.trello.com/1/members/me/boards?key=${API_KEY}&token=${TOKEN}`;
 
 const Home = () => {
   const [data, setData] = useState([]);
-
+  const [loadState, setLoadState] = useState(true);
   const fetchData = async () => {
     try {
       const data = await showBoards();
       setData(data);
+      setLoadState(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -43,18 +41,33 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          {data.length ? (
-            data.map((item) => <Board key={item.id} {...item} />)
+          {!loadState ? (
+            data.length ? (
+              data.map((item) => <Board key={item.id} {...item} />)
+            ) : (
+              <div
+                style={{
+                  width: "80vw",
+                  height: "60vh",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  marginRight: "10vw",
+                  marginTop: "2vh",
+                }}
+              >
+                <Alert severity="info">No boards to Display.</Alert>
+              </div>
+            )
           ) : (
             <div
               style={{
-                width: "80vw",
-                height: "60vh",
                 display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
+                flexWrap: "wrap",
+                marginLeft: "10vw",
                 marginRight: "10vw",
-                marginTop: "2vh",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Instagram style={{ marginInline: "1vw" }} />
